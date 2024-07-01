@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Productos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4b42dc1-4829-4bdd-9678-409c089c1eb8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     PRODUCT."NAME" AS PRODUCT_NAME,
+     POSITIONS."QUANTITY" AS POSITIONS_QUANTITY,
+     PRODUCT."COST" AS PRODUCT_COST
+FROM
+     "PUBLIC"."POSITIONS" POSITIONS INNER JOIN "PUBLIC"."PRODUCT" PRODUCT ON POSITIONS."PRODUCTID" = PRODUCT."ID"
+ORDER BY
+     PRODUCT."NAME"]]>
+	</queryString>
+	<field name="PRODUCT_NAME" class="java.lang.String"/>
+	<field name="POSITIONS_QUANTITY" class="java.lang.Integer"/>
+	<field name="PRODUCT_COST" class="java.math.BigDecimal"/>
+	<variable name="TOTAL_PRODUCTO" class="java.lang.Integer" resetType="Group" resetGroup="Grupo Articulos" calculation="Sum">
+		<variableExpression><![CDATA[$F{POSITIONS_QUANTITY}]]></variableExpression>
+	</variable>
+	<group name="Grupo Articulos">
+		<groupExpression><![CDATA[$F{PRODUCT_NAME}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField evaluationTime="Group" evaluationGroup="Grupo Articulos">
+					<reportElement x="0" y="0" width="100" height="20" uuid="38c77f76-0b03-4877-b70a-85314abf8599"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{PRODUCT_NAME}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="Grupo Articulos">
+					<reportElement x="100" y="0" width="100" height="20" uuid="02c6bbcb-90f8-47ef-b7ad-71d1efb1ba16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{TOTAL_PRODUCTO}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="20" width="181" height="1" uuid="7392cf19-f0fd-4c21-9036-230d7bd5d8ce"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="294" height="32" backcolor="#CCFFCC" uuid="22a62fd0-e602-4b64-bcdf-3be8585b9ab4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Ventas totales de cada producto]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="324de294-a751-4637-ab10-bd7828ac32f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="017bd726-6d24-4ee9-aedd-1d8078132a97"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Ventas totales]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="363">
+			<bar3DChart>
+				<chart>
+					<reportElement x="0" y="0" width="555" height="363" uuid="8382f657-0127-4e0f-ba16-75b426156aa9"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Cantidades totales vendidas"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PRODUCT_NAME}]]></categoryExpression>
+						<valueExpression><![CDATA[$V{TOTAL_PRODUCTO}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot labelRotation="-90.0"/>
+					<itemLabel/>
+					<categoryAxisFormat labelRotation="-90.0">
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+		</band>
+	</summary>
+</jasperReport>

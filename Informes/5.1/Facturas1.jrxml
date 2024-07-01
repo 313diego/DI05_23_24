@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f6855fc-115f-4303-a55d-14226079cb1a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     ADDRESS."ID" AS ADDRESS_ID,
+     ADDRESS."FIRSTNAME" AS ADDRESS_FIRSTNAME,
+     ADDRESS."LASTNAME" AS ADDRESS_LASTNAME,
+     ADDRESS."STREET" AS ADDRESS_STREET,
+     DOCUMENT."ID" AS DOCUMENT_ID,
+     DOCUMENT."TOTAL" AS DOCUMENT_TOTAL,
+     POSITIONS."QUANTITY" AS POSITIONS_QUANTITY,
+     PRODUCT."NAME" AS PRODUCT_NAME,
+     PRODUCT."COST" AS PRODUCT_COST,
+     POSITIONS."QUANTITY" * PRODUCT."COST" AS POSITIONS_TOTALPRODUCTO
+FROM
+     "PUBLIC"."DOCUMENT" DOCUMENT INNER JOIN "PUBLIC"."ADDRESS" ADDRESS ON DOCUMENT."ADDRESSID" = ADDRESS."ID"
+     INNER JOIN "PUBLIC"."POSITIONS" POSITIONS ON DOCUMENT."ID" = POSITIONS."DOCUMENTID"
+     INNER JOIN "PUBLIC"."PRODUCT" PRODUCT ON POSITIONS."PRODUCTID" = PRODUCT."ID"
+ORDER BY ADDRESS_ID]]>
+	</queryString>
+	<field name="ADDRESS_ID" class="java.lang.Integer"/>
+	<field name="ADDRESS_FIRSTNAME" class="java.lang.String"/>
+	<field name="ADDRESS_LASTNAME" class="java.lang.String"/>
+	<field name="ADDRESS_STREET" class="java.lang.String"/>
+	<field name="DOCUMENT_ID" class="java.lang.Integer"/>
+	<field name="DOCUMENT_TOTAL" class="java.math.BigDecimal"/>
+	<field name="POSITIONS_QUANTITY" class="java.lang.Integer"/>
+	<field name="PRODUCT_NAME" class="java.lang.String"/>
+	<field name="PRODUCT_COST" class="java.math.BigDecimal"/>
+	<field name="POSITIONS_TOTALPRODUCTO" class="java.math.BigDecimal"/>
+	<variable name="TotalFactura" class="java.math.BigDecimal" resetType="Group" resetGroup="Facturas" calculation="Sum">
+		<variableExpression><![CDATA[$F{POSITIONS_TOTALPRODUCTO}]]></variableExpression>
+	</variable>
+	<variable name="TotalCliente" class="java.math.BigDecimal" resetType="Group" resetGroup="Clientes" calculation="Sum">
+		<variableExpression><![CDATA[$F{POSITIONS_TOTALPRODUCTO}]]></variableExpression>
+	</variable>
+	<group name="Clientes">
+		<groupExpression><![CDATA[$F{ADDRESS_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="57">
+				<textField>
+					<reportElement x="0" y="31" width="100" height="20" uuid="86928df9-70e6-4511-b117-c6067310063f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Cliente: "+$F{ADDRESS_ID}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="31" width="100" height="20" uuid="09ae3e7a-3c2a-4d59-b1f1-089c1e22e92a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ADDRESS_FIRSTNAME}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="31" width="100" height="20" uuid="37aaf0ae-fea3-4343-a5b9-8419b4a6d4f3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ADDRESS_LASTNAME}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="300" y="31" width="100" height="20" uuid="a773aacf-d0ed-4134-b6b8-e73dabf738ec"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ADDRESS_STREET}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="100" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="9557cb06-5f19-4a8c-adb6-24a20204d997"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Nombre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="200" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="8c6d665f-36ba-449f-9cde-e22371bbfd6b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Apellidos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="300" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="26d422c0-9832-41db-81ce-b7f6d10e8e92"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Direccion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="04134284-dc29-4317-93cc-7b3171c55693"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28">
+				<textField>
+					<reportElement mode="Opaque" x="110" y="0" width="190" height="18" backcolor="#CCFFCC" uuid="8539c2b8-3ef5-4f7f-b623-559b314268c2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Total cliente: "+$V{TotalCliente}+" €"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Facturas">
+		<groupExpression><![CDATA[$F{DOCUMENT_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="54">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="110" height="20" backcolor="#FF6666" uuid="f1cbf436-423e-4a7f-aa5e-56c061cb71d4"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Factura número: "+$F{DOCUMENT_ID}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="28" width="100" height="20" backcolor="#CCCCCC" uuid="6c9da83f-6855-43a4-b140-c012939da277"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Producto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="100" y="28" width="100" height="20" backcolor="#CCCCCC" uuid="0b12b31e-aaa5-41b5-9c3e-1eb1fd6e192f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Cantidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="200" y="28" width="100" height="20" backcolor="#CCCCCC" uuid="fb7ca4b9-1b12-490c-bffb-b64ccf9e9d13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Precio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="300" y="28" width="100" height="20" backcolor="#CCCCCC" uuid="ec092786-a106-42ea-9366-77ddebb8a663"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="42">
+				<textField>
+					<reportElement mode="Opaque" x="239" y="0" width="161" height="20" backcolor="#FF6666" uuid="68ef5621-19c2-4845-a23e-449304a6e4bf"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Total factura: "+$V{TotalFactura}+" €"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="159" y="0" width="215" height="20" backcolor="#CCFFCC" uuid="50c0dfc9-d5a3-48cc-8ece-8d753325c742"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[LISTADO DE FACTURAS Y CLIENTES]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="8e05b766-53b6-4076-bee0-2b0072dc04a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PRODUCT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="465d30de-9d5e-41c1-b245-cb540290531a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{POSITIONS_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="82f6c581-21fb-44b1-ba7d-4b08dfec1db8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PRODUCT_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="fe81df1f-51d8-45f5-90c3-bbf6c9e2f33d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{POSITIONS_TOTALPRODUCTO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="400" height="1" uuid="87f41dde-41b1-44ee-bd40-17b716100ca1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>
